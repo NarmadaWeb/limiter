@@ -1,4 +1,4 @@
-name: Auto labeler bertani.ai
+name: Auto labeler
 
 on:
   issues:

@@ -1,4 +1,4 @@
-# Fiber Limiter
+# Fiber Middleware Limiter
 [![Go Report Card](https://goreportcard.com/badge/github.com/NarmadaWeb/limiter)](https://goreportcard.com/report/github.com/NarmadaWeb/limiter)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 

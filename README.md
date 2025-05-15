@@ -116,30 +116,14 @@ The middleware adds these standard headers to responses:
 - Counts requests per fixed interval
 - May allow bursts at window boundaries
 
-
-## Testing
-
-Run the test suite:
-
-```bash
-go test -v ./...
-```
-
-Test with coverage:
-
-```bash
-go test -coverprofile=coverage.out ./...
-go tool cover -html=coverage.out
-```
-
 ## Examples
 
 See the [examples directory](examples/) for:
-- Basic usage
-- Redis integration
-- Custom key generation
-- Error handling
-- Multiple limiters
+- [Basic usage](examples/README.md/#basic-example)
+- [Redis integration](examples/README.md/#use-with-redis)
+- [Custom key generation](examples/README.md/#custom-key)
+- [Error handling](examples/README.md/#error-handling)
+- [Multiple limiters](examples/README.md/#multiple-limiter)
 
 ## Contributing
 

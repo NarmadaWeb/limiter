@@ -31,8 +31,8 @@ func TestLimiterMiddleware(t *testing.T) {
 
 	// Test request dalam limit
 	for i := 0; i < 5; i++ {
-		resp, err := app.Test(httptest.NewRequest(http.MethodGet, "/", nil))
-		assert.NoError(t, err)
+		resp, err2 := app.Test(httptest.NewRequest(http.MethodGet, "/", nil))
+		assert.NoError(t, err2)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 	}
 

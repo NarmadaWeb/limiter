@@ -18,7 +18,7 @@ import (
 type Config struct {
 	// Redis Configuration for starting limiter
 	RedisClient *redis.Client
-	RedisUrl    string
+	RedisURL    string
 
 	// Rate Limiter configuration
 	MaxRequests int
@@ -130,8 +130,8 @@ func initStore(ctx context.Context, config Config) (Store, error) {
 	switch {
 	case config.RedisClient != nil:
 		return NewRedisStore(config.RedisClient), nil
-	case config.RedisUrl != "":
-		rdb := redis.NewClient(&redis.Options{Addr: config.RedisUrl})
+	case config.RedisURL != "":
+		rdb := redis.NewClient(&redis.Options{Addr: config.RedisURL})
 		if err := rdb.Ping(ctx).Err(); err != nil {
 			return nil, fmt.Errorf("redis connection failed: %w", err)
 		}

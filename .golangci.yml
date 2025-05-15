@@ -146,6 +146,7 @@ linters:
     - promlinter
     - reassign
     - rowserrcheck
+    - stylecheck
     - staticcheck
     - thelper
     - typecheck
@@ -161,4 +162,3 @@ linters:
     - gosec
     - revive
     - forcetypeassert
-    - stylecheck

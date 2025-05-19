@@ -1,4 +1,4 @@
-name: Auto labeler
+name: Auto labeler limiter
 
 on:
   issues:

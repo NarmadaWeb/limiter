@@ -26,7 +26,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer l.Close() // Important for Redis connection cleanup
 
 	app.Use(l.Middleware())
 

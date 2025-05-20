@@ -1,6 +1,7 @@
-# Fiber Middleware Limiter
+# Fiber Limiter [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/NarmadaWeb/limiter)](https://goreportcard.com/report/github.com/NarmadaWeb/limiter)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A high-performance rate limiting middleware for [Fiber](https://github.com/gofiber/fiber) with Redis and in-memory support, implementing multiple rate-limiting algorithms.
 
@@ -129,6 +130,8 @@ See the [examples directory](examples/) for:
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
+Please make sure to update tests as appropriate.
+
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+[MIT](LICENSE) © NarmadaWeb

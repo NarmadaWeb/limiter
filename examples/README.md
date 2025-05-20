@@ -1,6 +1,7 @@
-# Example limiter for fiber
+# Fiber Limiter Examples [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
-## basic example
+## Basic Example
+
 ```go
 package main
 
@@ -24,7 +25,7 @@ func main() {
 
 	l, err := limiter.New(cfg)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	app.Use(l.Middleware())
@@ -39,9 +40,8 @@ func main() {
 	log.Fatal(app.Listen(":3000"))
 }
 ```
----
 
-## use with redis
+## Use With Redis
 
 ```go
 package main
@@ -72,7 +72,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer l.Close() // Important for Redis connection cleanup
 
 	app.Use(l.Middleware())
 
@@ -106,18 +105,24 @@ func main() {
 	app := fiber.New()
 
 	// Global rate limiter (10 requests/minute)
-	globalLimiter, _ := limiter.New(limiter.Config{
+	globalLimiter, err := limiter.New(limiter.Config{
 		MaxRequests: 10,
 		Window:      1 * time.Minute,
 		Algorithm:   "sliding-window",
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Strict API limiter (2 requests/second)
-	apiLimiter, _ := limiter.New(limiter.Config{
+	apiLimiter, err := limiter.New(limiter.Config{
 		MaxRequests: 2,
 		Window:      1 * time.Second,
 		Algorithm:   "sliding-window",
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Apply global limiter to all routes
 	app.Use(globalLimiter.Middleware())
@@ -178,7 +183,7 @@ func main() {
 
 	l, err := limiter.New(cfg)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	app.Use(l.Middleware())
@@ -190,6 +195,7 @@ func main() {
 	log.Fatal(app.Listen(":3000"))
 }
 ```
+
 ## Custom Key
 
 ```go
@@ -220,7 +226,7 @@ func main() {
 
 	l, err := limiter.New(cfg)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	app.Use(l.Middleware())

@@ -1,9 +1,23 @@
 # Fiber Limiter [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/NarmadaWeb/limiter)](https://goreportcard.com/report/github.com/NarmadaWeb/limiter)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A high-performance rate limiting middleware for [Fiber](https://github.com/gofiber/fiber) with Redis and in-memory support, implementing multiple rate-limiting algorithms.
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Basic Example](#basic-example)
+  - [With Redis](#with-redis)
+- [Configuration Options](#configuration-options)
+- [Response Headers](#response-headers)
+- [Algorithms](#algorithms)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
@@ -61,19 +75,42 @@ func main() {
 ### With Redis
 
 ```go
-import "github.com/redis/go-redis/v9"
+package main
 
-// ...
+import (
+	"time"
 
-rdb := redis.NewClient(&redis.Options{
-	Addr: "localhost:6379",
-})
+	"github.com/NarmadaWeb/limiter/v2"
+	"github.com/gofiber/fiber/v2"
+	"github.com/redis/go-redis/v9"
+)
 
-limiterCfg := limiter.Config{
-	RedisClient: rdb,
-	MaxRequests: 200,
-	Window:      5 * time.Minute,
-	Algorithm:   "token-bucket",
+func main() {
+	app := fiber.New()
+
+	rdb := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+	})
+
+	limiterCfg := limiter.Config{
+		RedisClient: rdb,
+		MaxRequests: 200,
+		Window:      5 * time.Minute,
+		Algorithm:   "token-bucket",
+	}
+
+	l, err := limiter.New(limiterCfg)
+	if err != nil {
+		panic(err)
+	}
+
+	app.Use(l.Middleware())
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello with Redis!")
+	})
+
+	app.Listen(":3000")
 }
 ```
 
@@ -102,36 +139,35 @@ The middleware adds these standard headers to responses:
 
 ## Algorithms
 
-### 1. Token Bucket
-- Smooth bursting allowed
-- Gradually refills tokens at steady rate
-- Good for evenly distributed loads
+1. **Token Bucket**
+   - Smooth bursting allowed
+   - Gradually refills tokens at steady rate
+   - Good for evenly distributed loads
 
-### 2. Sliding Window
-- Precise request counting
-- Tracks exact request timestamps
-- Prevents bursts at window edges
+2. **Sliding Window**
+   - Precise request counting
+   - Tracks exact request timestamps
+   - Prevents bursts at window edges
 
-### 3. Fixed Window
-- Simple implementation
-- Counts requests per fixed interval
-- May allow bursts at window boundaries
+3. **Fixed Window**
+   - Simple implementation
+   - Counts requests per fixed interval
+   - May allow bursts at window boundaries
 
 ## Examples
 
-See the [examples directory](examples/) for:
-- [Basic usage](examples/README.md/#basic-example)
-- [Redis integration](examples/README.md/#use-with-redis)
-- [Custom key generation](examples/README.md/#custom-key)
-- [Error handling](examples/README.md/#error-handling)
-- [Multiple limiters](examples/README.md/#multiple-limiter)
+See the [examples directory](examples/) for more implementations:
+
+1. Basic usage
+2. Redis integration
+3. Custom key generation
+4. Error handling
+5. Multiple limiters
 
 ## Contributing
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
-
-Please make sure to update tests as appropriate.
+We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-[MIT](LICENSE) © NarmadaWeb
+MIT © NarmadaWeb - See [LICENSE](https://github.com/NarmadaWeb/limiter/blob/main/LICENSE) for details.

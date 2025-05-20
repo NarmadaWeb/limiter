@@ -35,7 +35,7 @@ func (r *RedisStore) Take(ctx context.Context, key string, maxRequests int, wind
 	}
 }
 
-func (r *RedisStore) tokenBucketTake(ctx context.Context, key string, maxRequests int, window time.Duration, now time.Time, reset time.Time) (bool, int, time.Time, error) {
+func (r *RedisStore) tokenBucketTake(ctx context.Context, key string, maxRequests int, window time.Duration, now, reset time.Time) (bool, int, time.Time, error) {
 	if err := r.ensureKeyType(ctx, key, "hash"); err != nil {
 		return false, 0, reset, err
 	}
@@ -78,12 +78,12 @@ func (r *RedisStore) tokenBucketTake(ctx context.Context, key string, maxRequest
 
 	allowed := results[0].(int64) == 1
 	remaining := int(results[1].(int64))
-	resetTime := time.Unix(int64(results[2].(int64)), 0)
+	resetTime := time.Unix(results[2].(int64), 0)
 
 	return allowed, remaining, resetTime, nil
 }
 
-func (r *RedisStore) slidingWindowTake(ctx context.Context, key string, maxRequests int, window time.Duration, now time.Time, reset time.Time) (bool, int, time.Time, error) {
+func (r *RedisStore) slidingWindowTake(ctx context.Context, key string, maxRequests int, window time.Duration, now, reset time.Time) (bool, int, time.Time, error) {
 	// Cleanup any existing key of wrong type
 	if err := r.ensureKeyType(ctx, key, "zset"); err != nil {
 		return false, 0, reset, err
@@ -120,12 +120,12 @@ func (r *RedisStore) slidingWindowTake(ctx context.Context, key string, maxReque
 
 	allowed := results[0].(int64) == 1
 	remaining := int(results[1].(int64))
-	resetUnix := int64(results[2].(int64))
+	resetUnix := results[2].(int64)
 
 	return allowed, remaining, time.Unix(resetUnix, 0), nil
 }
 
-func (r *RedisStore) fixedWindowTake(ctx context.Context, key string, maxRequests int, window time.Duration, now time.Time, reset time.Time) (bool, int, time.Time, error) {
+func (r *RedisStore) fixedWindowTake(ctx context.Context, key string, maxRequests int, window time.Duration, now, reset time.Time) (bool, int, time.Time, error) {
 	// Cleanup any existing key of wrong type
 	if err := r.ensureKeyType(ctx, key, "string"); err != nil {
 		return false, 0, reset, err
@@ -162,7 +162,7 @@ func (r *RedisStore) fixedWindowTake(ctx context.Context, key string, maxRequest
 }
 
 // ensureKeyType checks and converts key type if needed
-func (r *RedisStore) ensureKeyType(ctx context.Context, key string, expectedType string) error {
+func (r *RedisStore) ensureKeyType(ctx context.Context, key, expectedType string) error {
 	actualType, err := r.client.Type(ctx, key).Result()
 	if err != nil {
 		return fmt.Errorf("failed to check key type: %w", err)

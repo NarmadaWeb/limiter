@@ -1,6 +1,8 @@
 package limiter
 
-import "errors"
+import (
+	"errors"
+)
 
 var (
 	ErrInvalidAlgorithm = errors.New("invalid rate limiting algorithm")

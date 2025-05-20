@@ -1,22 +1,13 @@
-issues:
+# golangci-lint v1.64.8 configuration
+run:
+  timeout: 5m
   modules-download-mode: readonly
-  exclude-dirs-use-default: false
-  exclude-dirs:
-    - internal/
-    - vendor/
-    - views/
-    - testdata/
-    - scripts/
-    - bin/
-    - dist/
-    - .git/
-    - .github/
-    - .vscode/
-    - .idea/
+  allow-serial-runners: true
 
 output:
   sort-results: true
 
+linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: true
@@ -33,7 +24,6 @@ output:
       - ifElseChain
 
   gofumpt:
-    module-path: github.com/NarmadaWeb/limiter
     extra-rules: true
 
   gosec:
@@ -42,12 +32,38 @@ output:
         audit: true
 
   govet:
-    check-shadowing: true
-    enable-all: true
+    enable:
+      - atomicalign
+      - bools
+      - buildtag
+      - cgocall
+      - composites
+      - copylocks
+      - deepequalerrors
+      - directive
+      - errorsas
+      - httpresponse
+      - ifaceassert
+      - loopclosure
+      - lostcancel
+      - nilfunc
+      - printf
+      - shift
+      - sigchanyzer
+      - slog
+      - stdmethods
+      - stringintconv
+      - structtag
+      - testinggoroutine
+      - tests
+      - timeformat
+      - unmarshal
+      - unreachable
+      - unsafeptr
+      - unusedresult
     disable:
       - shadow
       - fieldalignment
-      - loopclosure
 
   grouper:
     import-require-single-import: true
@@ -60,67 +76,38 @@ output:
     require-explanation: true
     require-specific: true
 
-  nonamedreturns:
-    report-error-in-defer: true
-
-  predeclared:
-    q: true
-
-  promlinter:
-    strict: true
-
   revive:
-    enable-all-rules: true
+    ignore-generated-header: false
+    severity: warning
+    confidence: 0.8
     rules:
-      - name: add-constant
-        disabled: true
-      - name: argument-limit
-        disabled: true
-      - name: banned-characters
-        disabled: true
-      - name: cognitive-complexity
-        disabled: true
-      - name: cyclomatic
-        disabled: true
-      - name: early-return
-        severity: warning
-        disabled: true
-      - name: exported
-        disabled: true
-      - name: file-header
-        disabled: true
-      - name: function-result-limit
-        disabled: true
-      - name: function-length
-        disabled: true
-      - name: line-length-limit
-        disabled: true
-      - name: max-public-structs
-        disabled: true
-      - name: modifies-parameter
-        disabled: true
-      - name: nested-structs
-        disabled: true
-      - name: package-comments
-        disabled: true
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+        arguments:
+          - disableStutteringCheck: true
+      - name: indent-error-flow
+      - name: increment-decrement
+        arguments:
+          - allowCommonInitialisms: true
 
   tagliatelle:
     case:
       rules:
         json: snake
 
-  wrapcheck:
-    ignorePackageGlobs:
-      - github.com/NarmadaWeb/bertani-ai/*
-
 linters:
+  disable-all: true
   enable:
     - asasalint
     - asciicheck
     - bidichk
     - contextcheck
     - dogsled
-    - errcheck
     - errchkjson
     - errname
     - errorlint
@@ -134,6 +121,7 @@ linters:
     - gosimple
     - govet
     - grouper
+    - ineffassign
     - loggercheck
     - misspell
     - nakedret
@@ -145,20 +133,15 @@ linters:
     - predeclared
     - promlinter
     - reassign
+    - revive
     - rowserrcheck
-    - stylecheck
     - staticcheck
+    - stylecheck
     - thelper
     - typecheck
+    - unconvert
     - unparam
     - unused
     - usestdlibvars
     - wastedassign
     - whitespace
-
-
-  disable:
-    - wrapcheck
-    - gosec
-    - revive
-    - forcetypeassert

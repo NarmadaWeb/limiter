@@ -1,4 +1,4 @@
-# Fiber Limiter [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+# Limiter Middleware for gofiber
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/NarmadaWeb/limiter)](https://goreportcard.com/report/github.com/NarmadaWeb/limiter)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)

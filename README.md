@@ -1,6 +1,3 @@
-To fix the MD010 errors caused by hard tabs in the README.md file, replace all tab characters with spaces in the code blocks and other affected sections. Here's the corrected README content:
-
-```markdown
 # Limiter Middleware for gofiber
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/NarmadaWeb/limiter)](https://goreportcard.com/report/github.com/NarmadaWeb/limiter)

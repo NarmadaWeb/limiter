@@ -62,10 +62,10 @@ func main() {
 		panic(err)
 	}
 
-	app.Use(l.Middleware())
+    app.Use(l.Middleware())
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+        return c.SendString("Hello, World!")
 	})
 
 	app.Listen(":3000")
@@ -89,25 +89,25 @@ func main() {
 	app := fiber.New()
 
 	rdb := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+        Addr: "localhost:6379",
 	})
 
 	limiterCfg := limiter.Config{
 		RedisClient: rdb,
-		MaxRequests: 200,
-		Window:      5 * time.Minute,
-		Algorithm:   "token-bucket",
+        MaxRequests: 200,
+        Window:      5 * time.Minute,
+        Algorithm:   "token-bucket",
 	}
 
 	l, err := limiter.New(limiterCfg)
 	if err != nil {
-		panic(err)
+        panic(err)
 	}
-
-	app.Use(l.Middleware())
+    app.Use(l.Middleware())
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello with Redis!")
+
+        return c.SendString("Hello with Redis!")
 	})
 
 	app.Listen(":3000")

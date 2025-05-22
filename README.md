@@ -1,3 +1,6 @@
+To fix the MD010 errors caused by hard tabs in the README.md file, replace all tab characters with spaces in the code blocks and other affected sections. Here's the corrected README content:
+
+```markdown
 # Limiter Middleware for gofiber
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/NarmadaWeb/limiter)](https://goreportcard.com/report/github.com/NarmadaWeb/limiter)
@@ -41,34 +44,34 @@ go get github.com/NarmadaWeb/limiter/v2
 package main
 
 import (
-	"time"
+    "time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/NarmadaWeb/limiter/v2"
+    "github.com/gofiber/fiber/v2"
+    "github.com/NarmadaWeb/limiter/v2"
 )
 
 func main() {
-	app := fiber.New()
+    app := fiber.New()
 
-	// Initialize with default in-memory store
-	limiterCfg := limiter.Config{
-		MaxRequests: 100,
-		Window:      1 * time.Minute,
-		Algorithm:   "sliding-window",
-	}
+    // Initialize with default in-memory store
+    limiterCfg := limiter.Config{
+        MaxRequests: 100,
+        Window:      1 * time.Minute,
+        Algorithm:   "sliding-window",
+    }
 
-	l, err := limiter.New(limiterCfg)
-	if err != nil {
-		panic(err)
-	}
+    l, err := limiter.New(limiterCfg)
+    if err != nil {
+        panic(err)
+    }
 
     app.Use(l.Middleware())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+    app.Get("/", func(c *fiber.Ctx) error {
         return c.SendString("Hello, World!")
-	})
+    })
 
-	app.Listen(":3000")
+    app.Listen(":3000")
 }
 ```
 
@@ -78,39 +81,38 @@ func main() {
 package main
 
 import (
-	"time"
+    "time"
 
-	"github.com/NarmadaWeb/limiter/v2"
-	"github.com/gofiber/fiber/v2"
-	"github.com/redis/go-redis/v9"
+    "github.com/NarmadaWeb/limiter/v2"
+    "github.com/gofiber/fiber/v2"
+    "github.com/redis/go-redis/v9"
 )
 
 func main() {
-	app := fiber.New()
+    app := fiber.New()
 
-	rdb := redis.NewClient(&redis.Options{
+    rdb := redis.NewClient(&redis.Options{
         Addr: "localhost:6379",
-	})
+    })
 
-	limiterCfg := limiter.Config{
-		RedisClient: rdb,
+    limiterCfg := limiter.Config{
+        RedisClient: rdb,
         MaxRequests: 200,
         Window:      5 * time.Minute,
         Algorithm:   "token-bucket",
-	}
+    }
 
-	l, err := limiter.New(limiterCfg)
-	if err != nil {
+    l, err := limiter.New(limiterCfg)
+    if err != nil {
         panic(err)
-	}
+    }
     app.Use(l.Middleware())
 
-	app.Get("/", func(c *fiber.Ctx) error {
-
+    app.Get("/", func(c *fiber.Ctx) error {
         return c.SendString("Hello with Redis!")
-	})
+    })
 
-	app.Listen(":3000")
+    app.Listen(":3000")
 }
 ```
 

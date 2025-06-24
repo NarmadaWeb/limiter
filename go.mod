@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.8
-	github.com/redis/go-redis/v9 v9.10.0
+	github.com/redis/go-redis/v9 v9.11.0
 	github.com/stretchr/testify v1.10.0
 )
 

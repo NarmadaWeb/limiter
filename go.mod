@@ -3,7 +3,7 @@ module github.com/NarmadaWeb/limiter/v2
 go 1.22
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.9
+	github.com/gofiber/fiber/v2 v2.52.10
 	github.com/redis/go-redis/v9 v9.17.0
 	github.com/stretchr/testify v1.11.1
 )

@@ -66,11 +66,7 @@ MD020: true
 MD021: true
 
 # MD022/blanks-around-headings : Headings should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md022.md
-MD022:
-  # Blank lines above heading
-  lines_above: 1
-  # Blank lines below heading
-  lines_below: 1
+MD022: false
 
 # MD023/heading-start-left : Headings must start at the beginning of the line : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md023.md
 MD023: true
@@ -118,7 +114,7 @@ MD031:
   list_items: true
 
 # MD032/blanks-around-lists : Lists should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md032.md
-MD032: true
+MD032: false
 
 # MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md033.md
 MD033: false
@@ -236,3 +232,9 @@ MD055:
 
 # MD056/table-column-count : Table column count : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md056.md
 MD056: true
+
+# MD058/blanks-around-tables : Tables should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md058.md
+MD058: false
+
+# MD060/table-column-style : Table column style : https://github.com/DavidAnson/markdownlint/blob/v0.34.0/doc/md060.md
+MD060: false

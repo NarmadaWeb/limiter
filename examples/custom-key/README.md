@@ -8,43 +8,43 @@ This example demonstrates custom key generation for rate limiting based on API k
 package main
 
 import (
-	"log"
-	"time"
+    "log"
+    "time"
 
-	"github.com/NarmadaWeb/limiter/v2"
-	"github.com/gofiber/fiber/v2"
+    "github.com/NarmadaWeb/limiter/v2"
+    "github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	app := fiber.New()
+    app := fiber.New()
 
-	cfg := limiter.Config{
-		MaxRequests: 10,
-		Window:      1 * time.Hour,
-		Algorithm:   "token-bucket",
-	}
+    cfg := limiter.Config{
+        MaxRequests: 10,
+        Window:      1 * time.Hour,
+        Algorithm:   "token-bucket",
+    }
 
-	l, err := limiter.New(cfg)
-	if err != nil {
-		panic(err)
-	}
+    l, err := limiter.New(cfg)
+    if err != nil {
+        panic(err)
+    }
 
-	fiberCfg := limiter.FiberConfig{
-		KeyGenerator: func(c *fiber.Ctx) string {
-			if apiKey := c.Get("X-API-Key"); apiKey != "" {
-				return "api:" + apiKey
-			}
-			return "ip:" + c.IP() + ":" + c.Path()
-		},
-	}
+    fiberCfg := limiter.FiberConfig{
+        KeyGenerator: func(c *fiber.Ctx) string {
+            if apiKey := c.Get("X-API-Key"); apiKey != "" {
+                return "api:" + apiKey
+            }
+            return "ip:" + c.IP() + ":" + c.Path()
+        },
+    }
 
-	app.Use(l.FiberMiddleware(fiberCfg))
+    app.Use(l.FiberMiddleware(fiberCfg))
 
-	app.Get("/profile", func(c *fiber.Ctx) error {
-		return c.SendString("Profile page - custom key rate limiting")
-	})
+    app.Get("/profile", func(c *fiber.Ctx) error {
+        return c.SendString("Profile page - custom key rate limiting")
+    })
 
-	log.Fatal(app.Listen(":3000"))
+    log.Fatal(app.Listen(":3000"))
 }
 ```
 
@@ -55,6 +55,7 @@ go run main.go
 ```
 
 This example uses a custom key generator that:
+
 - Uses API key from `X-API-Key` header if present (prefixing with "api:")
 - Falls back to IP address + path combination if no API key
 

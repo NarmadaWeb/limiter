@@ -10,8 +10,8 @@ A high-performance rate limiting middleware supporting multiple Go web framework
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Basic Example](#basic-example)
-  - [With Redis](#with-redis)
+- [Basic Example](#basic-example-fiber)
+- [With Redis](#with-redis-fiber)
 - [Configuration Options](#configuration-options)
 - [Response Headers](#response-headers)
 - [Algorithms](#algorithms)
@@ -250,6 +250,7 @@ func main() {
 Each framework has its own configuration struct with framework-specific handlers:
 
 #### FiberConfig
+
 | Option                | Type                  | Description                                                                 |
 |-----------------------|-----------------------|-----------------------------------------------------------------------------|
 | `KeyGenerator`        | `func(*fiber.Ctx) string` | Custom function to generate rate limit keys (default: client IP)         |
@@ -258,6 +259,7 @@ Each framework has its own configuration struct with framework-specific handlers
 | `ErrorHandler`        | `func(*fiber.Ctx, error) error` | Custom error handler for storage/configuration errors           |
 
 #### GinConfig
+
 | Option                | Type                  | Description                                                                 |
 |-----------------------|-----------------------|-----------------------------------------------------------------------------|
 | `KeyGenerator`        | `func(*gin.Context) string` | Custom function to generate rate limit keys (default: client IP)         |
@@ -270,9 +272,9 @@ Each framework has its own configuration struct with framework-specific handlers
 |-----------------------|-----------------------|-----------------------------------------------------------------------------|
 | `KeyGenerator`        | `func(echo.Context) string` | Custom function to generate rate limit keys (default: real IP)           |
 | `SkipSuccessful`      | `bool`                | Don't count successful requests (status < 400)                              |
+
 | `LimitReachedHandler` | `func(echo.Context) error` | Custom handler when limit is reached                                        |
 | `ErrorHandler`        | `func(echo.Context, error) error` | Custom error handler for storage/configuration errors           |
-
 #### StdLibConfig
 | Option                | Type                  | Description                                                                 |
 |-----------------------|-----------------------|-----------------------------------------------------------------------------|
@@ -304,20 +306,21 @@ The middleware adds these standard headers to responses:
 
 3. **Fixed Window**
    - Simple implementation
+
    - Counts requests per fixed interval
    - May allow bursts at window boundaries
-
 ## Examples
-
 See the [examples directory](examples/) for complete implementations for all supported frameworks:
 
 ### Fiber Examples
 - **[Basic](./examples/basic/)** - Simple rate limiting with in-memory storage
+
 - **[Redis](./examples/redis/)** - Distributed rate limiting using Redis
+
 - **[Multiple Limiters](./examples/multiple-limiter/)** - Using different rate limiters for different routes
 - **[Error Handling](./examples/error-handling/)** - Custom error and rate limit exceeded handlers
-- **[Custom Key](./examples/custom-key/)** - Custom key generation for rate limiting buckets
 
+- **[Custom Key](./examples/custom-key/)** - Custom key generation for rate limiting buckets
 ### Gin Examples
 - **[Gin Basic](./examples/gin/)** - Rate limiting with Gin framework
 

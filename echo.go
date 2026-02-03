@@ -2,6 +2,7 @@ package limiter
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -32,10 +33,18 @@ func (l *Limiter) EchoMiddleware(cfg EchoConfig) echo.MiddlewareFunc {
 		}
 	}
 	if cfg.ErrorHandler == nil {
+		/**
+		 * SECURITY FIX: MEDIUM – Sensitive Data Exposure (Error Leak)
+		 * Risk: Attacker gains knowledge of internal infrastructure or implementation details.
+		 * Attack vector: Triggering rate-limit errors to reveal connection strings or file paths.
+		 * Mitigation: Masked internal error messages with a generic "Internal rate limit error".
+		 * References: CWE-209, OWASP A04:2021-Insecure Design
+		 */
 		cfg.ErrorHandler = func(c echo.Context, err error) error {
+			log.Printf("Rate limiter error: %v", err)
 			return c.JSON(http.StatusInternalServerError, map[string]string{
 				"error":   "rate limit error",
-				"message": err.Error(),
+				"message": "Internal rate limit error",
 			})
 		}
 	}

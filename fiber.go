@@ -2,6 +2,7 @@ package limiter
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -66,9 +67,17 @@ func defaultFiberLimitReachedHandler(c *fiber.Ctx) error {
 }
 
 func defaultFiberErrorHandler(c *fiber.Ctx, err error) error {
+	/**
+	 * SECURITY FIX: MEDIUM – Sensitive Data Exposure (Error Leak)
+	 * Risk: Attacker gains knowledge of internal infrastructure or implementation details.
+	 * Attack vector: Triggering rate-limit errors to reveal connection strings or file paths.
+	 * Mitigation: Masked internal error messages with a generic "Internal rate limit error".
+	 * References: CWE-209, OWASP A04:2021-Insecure Design
+	 */
+	log.Printf("Rate limiter error: %v", err)
 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 		"error":   "rate limit error",
-		"message": err.Error(),
+		"message": "Internal rate limit error",
 	})
 }
 

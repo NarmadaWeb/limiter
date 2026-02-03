@@ -3,9 +3,10 @@ package limiter
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"net"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -21,15 +22,19 @@ type StdLibConfig struct {
 func (l *Limiter) StdLibMiddleware(cfg StdLibConfig) func(http.Handler) http.Handler {
 	// Set defaults
 	if cfg.KeyGenerator == nil {
+		/**
+		 * SECURITY FIX: HIGH – Improper Authentication (IP Spoofing)
+		 * Risk: Attacker bypasses rate limits by providing fraudulent X-Forwarded-For headers.
+		 * Attack vector: Spoofing headers to simulate requests from multiple distinct clients.
+		 * Mitigation: Defaulted to RemoteAddr; delegated header trust to explicit user configuration.
+		 * References: CWE-290, OWASP A07:2021-Identification and Authentication Failures
+		 */
 		cfg.KeyGenerator = func(r *http.Request) string {
-			// Basic IP extraction
-			ip := r.Header.Get("X-Forwarded-For")
-			if ip == "" {
-				ip = r.RemoteAddr
-				// Remove port if present
-				if idx := strings.LastIndex(ip, ":"); idx != -1 {
-					ip = ip[:idx]
-				}
+			// Use RemoteAddr by default for security.
+			// Users behind a proxy should provide a custom KeyGenerator that trusts specific headers.
+			ip, _, err := net.SplitHostPort(r.RemoteAddr)
+			if err != nil {
+				return r.RemoteAddr
 			}
 			return ip
 		}
@@ -38,28 +43,28 @@ func (l *Limiter) StdLibMiddleware(cfg StdLibConfig) func(http.Handler) http.Han
 		cfg.LimitReachedHandler = func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusTooManyRequests)
-			if err := json.NewEncoder(w).Encode(map[string]string{
+			_ = json.NewEncoder(w).Encode(map[string]string{
 				"error":   "rate limit exceeded",
 				"message": "Too many requests, please try again later",
-			}); err != nil {
-				// JSON encoding error, fallback to plain text
-				w.Header().Set("Content-Type", "text/plain")
-				w.Write([]byte("rate limit exceeded"))
-			}
+			})
 		}
 	}
 	if cfg.ErrorHandler == nil {
+		/**
+		 * SECURITY FIX: MEDIUM – Sensitive Data Exposure (Error Leak)
+		 * Risk: Attacker gains knowledge of internal infrastructure or implementation details.
+		 * Attack vector: Triggering rate-limit errors to reveal connection strings or file paths.
+		 * Mitigation: Masked internal error messages with a generic "Internal rate limit error".
+		 * References: CWE-209, OWASP A04:2021-Insecure Design
+		 */
 		cfg.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
+			log.Printf("Rate limiter error: %v", err)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusInternalServerError)
-			if encodeErr := json.NewEncoder(w).Encode(map[string]string{
+			_ = json.NewEncoder(w).Encode(map[string]string{
 				"error":   "rate limit error",
-				"message": err.Error(),
-			}); encodeErr != nil {
-				// JSON encoding error, fallback to plain text
-				w.Header().Set("Content-Type", "text/plain")
-				w.Write([]byte("rate limit error"))
-			}
+				"message": "Internal rate limit error",
+			})
 		}
 	}
 

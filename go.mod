@@ -6,7 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/gofiber/fiber/v2 v2.52.9
-	github.com/labstack/echo/v4 v4.14.0
+	github.com/labstack/echo/v4 v4.15.0
 	github.com/redis/go-redis/v9 v9.17.2
 	github.com/stretchr/testify v1.11.1
 )
